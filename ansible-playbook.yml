@@ -1,0 +1,33 @@
+---
+- name: Setup Node.js Application with MongoDB
+  hosts: 13.233.113.154
+  remote_user: ubuntu
+  become: yes
+  gather_facts: true
+
+  tasks:
+    - name: Install required packages on Debian-based systems
+      apt:
+        name: [nodejs, npm]
+        state: present
+      when: ansible_distribution == 'Debian'
+
+    - name: Install express npm package
+      npm:
+        name: express
+        global: yes
+
+    - name: Install mongoose npm package
+      npm:
+        name: mongoose
+        global: yes
+
+    - name: Clone application code
+      git:
+        repo: https://github.com/AbhayGRT/Node-Npm-Mongo-Ansible-Project.git
+        dest: /home/ubuntu/Ansible-Project
+        version: main
+
+    - name: Run Node.js application
+      command: node /home/ubuntu/Ansible-Project/index.js
+
